@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+        <record id="due_make_invoice_form" model="ir.ui.view">
+            <field name="name">Crear Factura</field>
+            <field name="model">due.invoice</field>
+            <field name="arch" type="xml">
+                <form string="Crear Factura">
+                    <p class="oe_grey">
+                        Facturar Cuota.
+                    </p>
+                    <footer>
+                        <button name="action_invoice"
+                                string="Crear Facturas"
+                                type="object"
+                                class="oe_highlight" />
+                        or
+                        <button special="cancel"
+                                string="Cancelar"
+                                class="oe_link" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <!--<act_window id="action_cobers_make_invoices"-->
+                    <!--name="Crear facturas de coberturas"-->
+                    <!--res_model="cobers.close"-->
+                    <!--view_mode="form"-->
+                    <!--view_type="form"-->
+                    <!--target="new" />-->
+
+        <act_window id="action_due_make_invoices"
+                name="Facturar"
+                res_model="due.invoice"
+                view_mode="form" target="new" view_type="form" />
+</odoo>
