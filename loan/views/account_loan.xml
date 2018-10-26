@@ -20,10 +20,8 @@
                     <button name="compute_lines" type="object"
                             states="draft"
                             string="Calcular Cuotas"/>
-                    <button name="post"
-                            type="object"
-                            states="draft"
-                            string="Aprobar"/>
+
+
                     <field name="state" widget="statusbar"/>
                 </header>
                 <sheet>
@@ -76,6 +74,10 @@
                 <field name="paid" widget="boolean_button"/>
                 <field name="date_paid"/>
                 <field name="invoice_id" widget="many2one_clickable"/>
+                <button name="due_print"
+                            type="object"
+                            attrs="{'invisible':[('invoice_id','=',False)]}"
+                            string="Imprimir"/>
                 <button name="pay_due"  attrs="{'invisible':['|',('ready','!=',True),('paid','=',True)]}" type="object" string="Pagar" class="oe_highlight"/>
             </tree>
         </field>

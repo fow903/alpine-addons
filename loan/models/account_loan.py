@@ -126,6 +126,14 @@ class AccountLoanLine(models.Model):
         # action['views'] = [(self.env.ref('account.invoice_form').id, 'form')]
         return action
 
+    @api.multi
+    def due_print(self):
+        """ Print the invoice and mark it as sent, so that we can see more
+            easily the next step of the workflow
+        """
+        self.ensure_one()
+        return self.env['report'].get_action(self, 'account.report_invoice')
+
     def invoice_due(self):
         self.ensure_one()
         invoice_line_ids = []
