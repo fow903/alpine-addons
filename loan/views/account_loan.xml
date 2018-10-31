@@ -94,4 +94,12 @@
               parent="account.menu_finance_entries" sequence="80"
               name="Prestamos"
               action="account_loan_action"/>
+
+    <menuitem id="loans_root"
+              name="Préstamos"
+              sequence="10"
+              web_icon="loan,static/description/icon.png"
+              load_xmlid="True"
+              action="account_loan_action"
+              />
 </odoo>
