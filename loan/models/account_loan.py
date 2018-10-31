@@ -132,7 +132,7 @@ class AccountLoanLine(models.Model):
             easily the next step of the workflow
         """
         self.ensure_one()
-        return self.env['report'].get_action(self, 'account.report_invoice')
+        return self.env['report'].get_action(self, 'reporte_factura.payment_receipt_doc')
 
     def invoice_due(self):
         self.ensure_one()
