@@ -1,4 +1,4 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_account_loan,access_account_loan,model_account_loan,account.group_account_manager,1,1,1,1
 access_account_loan_line,access_account_loan_line,model_account_loan_line,account.group_account_manager,1,1,1,1
-access_rate_loan,access_rate_loan,model_loan_rate,account.group_account_manager,1,1,1,1
+access_rate_loan,access_rate_loan,model_rate_loan,account.group_account_manager,1,1,1,1
