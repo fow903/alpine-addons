@@ -1,23 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="product_loan" model="product.template">
-        <field name="name">Préstamo</field>
-        <field name="type">service</field>
-        <field name="default_code">loan</field>
-        <field name="sale_ok">True</field>
-        <field name="purchase_ok">False</field>
-    </record>
-    <record id="product_morse" model="product.template">
-        <field name="name">Mora</field>
-        <field name="type">service</field>
-        <field name="default_code">morse</field>
-        <field name="sale_ok">True</field>
-        <field name="purchase_ok">False</field>
-    </record>
-    <record id="product_journal_loan" model="account.journal">
-        <field name="name">Préstamo</field>
-        <field name="type">sale</field>
-        <field name="code">loan</field>
-        <field name="update_posted">True</field>
-    </record>
+    <data noupdate="1">
+        <record id="product_loan" model="product.template">
+            <field name="name">Préstamo</field>
+            <field name="type">service</field>
+            <field name="default_code">loan</field>
+            <field name="sale_ok">True</field>
+            <field name="purchase_ok">False</field>
+        </record>
+        <record id="product_morse" model="product.template">
+            <field name="name">Mora</field>
+            <field name="type">service</field>
+            <field name="default_code">morse</field>
+            <field name="sale_ok">True</field>
+            <field name="purchase_ok">False</field>
+        </record>
+        <record id="product_journal_loan" model="account.journal">
+            <field name="name">Préstamo</field>
+            <field name="type">sale</field>
+            <field name="code">loan</field>
+            <field name="update_posted">True</field>
+        </record>
+        <record id="seq_hr_employee" model="ir.sequence">
+            <field name="name">loan_sequencer</field>
+            <field name="code">account.loan</field>
+            <field name="prefix">Préstamo/%(range_year)s-%(month)s-</field>
+            <field name="padding">5</field>
+        </record>
+    </data>
 </odoo>

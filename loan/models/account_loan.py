@@ -37,6 +37,14 @@ class AccountLoan(models.Model):
     payment_amount = fields.Monetary(string="Cuota")
     start_date = fields.Date(string="Fecha inicial")
 
+
+    @api.model
+    def create(self, vals):
+        seq = self.env['ir.sequence'].next_by_code('account.loan') or '/'
+        vals['name'] = seq
+        res = super(AccountLoan, self).create(vals)
+        return res
+
     @api.multi
     def compute_payment(self):
         print self.rate_id.rate/100

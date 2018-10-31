@@ -31,7 +31,7 @@
 
                     <!--</div>-->
                     <h1>
-                        <field name="name"/>
+                        <field name="name" readonly="1"/>
                     </h1>
                     <group>
                         <group>
