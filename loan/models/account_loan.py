@@ -12,7 +12,10 @@ import math
 class AccountLoan(models.Model):
     _name = 'account.loan'
     _description = 'Prestamos'
-    # _inherit = ['mail.thread']
+    _inherit = [
+        'mail.thread',
+        'ir.needaction_mixin',
+    ]
 
     states_loans = [
         ('draft', 'Borrador'),
