@@ -117,6 +117,10 @@ class AccountLoan(models.Model):
         for line in self.line_ids:
             line.ready = True
 
+    @api.multi
+    def cancel(self):
+        self.state = 'cancel'
+
 
 class AccountLoanLine(models.Model):
     _name = 'account.loan.line'
