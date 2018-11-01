@@ -2,6 +2,7 @@
 
 from odoo import api, fields, models
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DF
+from odoo.exceptions import ValidationError
 
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
@@ -50,8 +51,10 @@ class AccountLoan(models.Model):
 
     @api.multi
     def compute_payment(self):
-        print self.rate_id.rate/100
-        self.payment_amount = -np.pmt(self.rate_id.rate/100,self.payments, self.amount)
+        if self.payments == 0:
+            raise ValidationError("Debe seleccionar la cantidad de cuotas")
+        else:
+            self.payment_amount = -np.pmt(self.rate_id.rate/100,self.payments, self.amount)
 
     @api.multi
     def compute_lines(self):
@@ -88,6 +91,8 @@ class AccountLoan(models.Model):
             delta = relativedelta(days=1)
         elif self.rate_id.type == 'weekly':
             delta = relativedelta(weeks=1)
+        elif self.rate_id.type == 'quincel':
+            delta = relativedelta(weeks=2)
         elif self.rate_id.type == 'monthly':
             delta = relativedelta(months=1)
         elif self.rate_id.type == 'bimonthly':
