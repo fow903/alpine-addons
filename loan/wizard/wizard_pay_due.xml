@@ -8,6 +8,11 @@
                     <p class="oe_grey">
                         Facturar Cuota.
                     </p>
+                    <group>
+                        <field name="morse" widget="monetary" readonly="1" string="Mora"/>
+                        <field name="cober_morse" string="Cobrar Mora"/>
+                    </group>
+
                     <footer>
                         <button name="action_invoice"
                                 string="Crear Facturas"

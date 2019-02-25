@@ -121,10 +121,25 @@ class AccountLoan(models.Model):
     def cancel(self):
         self.state = 'cancel'
 
+    @api.multi
+    def paid(self):
+        self.state = 'paid'
+
+    @api.multi
+    def draft(self):
+        self.state = 'draft'
+
 
 class AccountLoanLine(models.Model):
     _name = 'account.loan.line'
     _description = 'Cuotas'
+
+    invoice_states = [
+        ('cancel','Cancelada'),
+        ('open','Abierta'),
+        ('paid','Pagada'),
+        ('draft','Borrador'),
+    ]
 
     number = fields.Char(string="Numero")
     ready = fields.Boolean(string="Lista", default=False)
@@ -140,10 +155,10 @@ class AccountLoanLine(models.Model):
     total = fields.Monetary(string="Saldo Final")
     paid = fields.Boolean(string="Pagada")
     invoice_id = fields.Many2one("account.invoice", string="Factura")
+    invoice_state = fields.Selection(invoice_states,string="Estado Factura",related="invoice_id.state")
 
     def pay_due(self):
         action = self.env.ref('loan.action_due_make_invoices').read()[0]
-        # action['views'] = [(self.env.ref('account.invoice_form').id, 'form')]
         return action
 
     @api.multi
@@ -154,24 +169,13 @@ class AccountLoanLine(models.Model):
         self.ensure_one()
         return self.env['report'].get_action(self, 'reporte_factura.payment_receipt_doc')
 
-    def invoice_due(self):
-        self.ensure_one()
-        invoice_line_ids = []
-        loan_prod = self.env['product.template'].search([('default_code', '=', 'loan')])
-        morse_tmpl = self.env['product.template'].search([('default_code', '=', 'morse')])
-        prod = self.env['product.product'].search([('product_tmpl_id', '=', loan_prod.id)])
-        morse_prod = self.env['product.product'].search([('product_tmpl_id', '=', morse_tmpl.id)])
-        invoice_line_ids.append((0, 0, {
-            'product_id': prod.id,
-            'name': prod.name,
-            'price_unit': self.dues,
-            'account_id': prod.property_account_income_id.id
-        }))
+    def get_morse(self):
+        print("aqui mmg")
         due_date = datetime.strptime(self.date, '%Y-%m-%d')
         today = datetime.today()
         if due_date < today:
             morse = self.dues * (self.loan_id.rate_id.morse/100)
-            print morse
+            print("Morseeee: ",morse,"Cuota: ",self.dues)
             times = (today - due_date).days
             if self.loan_id.rate_id.type == 'daily':
                 times = times
@@ -184,21 +188,59 @@ class AccountLoanLine(models.Model):
             elif self.loan_id.rate_id.type == 'bimonthly':
                 times = int(times/60)
 
-            print times
             morse_last = 0.0
+            print(times)
             for time in range(times):
+                # print("Vez",time)
                 morse_last += morse
 
-            self.morse = morse_last
-            if morse_last > 0.0 :
-                invoice_line_ids.append((0, 0, {
-                    'product_id': morse_prod.id,
-                    'name': morse_prod.name,
-                    'price_unit': morse_last,
-                    'account_id': morse_prod.property_account_income_id.id
-                }))
-            else:
-                pass
+            print("Mora: ",morse_last)
+            return morse_last
+
+
+    def invoice_due(self, morse=True):
+        self.ensure_one()
+        invoice_line_ids = []
+        loan_prod = self.env['product.template'].search([('default_code', '=', 'loan')])
+        morse_tmpl = self.env['product.template'].search([('default_code', '=', 'morse')])
+        prod = self.env['product.product'].search([('product_tmpl_id', '=', loan_prod.id)])
+        morse_prod = self.env['product.product'].search([('product_tmpl_id', '=', morse_tmpl.id)])
+        invoice_line_ids.append((0, 0, {
+            'product_id': prod.id,
+            'name': prod.name,
+            'price_unit': self.dues,
+            'account_id': prod.property_account_income_id.id
+        }))
+        # due_date = datetime.strptime(self.date, '%Y-%m-%d')
+        # today = datetime.today()
+        # if due_date < today:
+        #     morse = self.dues * (self.loan_id.rate_id.morse/100)
+        #     times = (today - due_date).days
+        #     if self.loan_id.rate_id.type == 'daily':
+        #         times = times
+        #     elif self.loan_id.rate_id.type == 'weekly':
+        #         times = int(times/7)
+        #     elif self.loan_id.rate_id.type == 'quincel':
+        #         times = int(times/15)
+        #     elif self.loan_id.rsate_id.type == 'monthly':
+        #         times = int(times/30)
+        #     elif self.loan_id.rate_id.type == 'bimonthly':
+        #         times = int(times/60)
+        #
+        #     morse_last = 0.0
+        #     for time in range(times):
+        #         morse_last += morse
+
+        self.morse = self.get_morse()
+        if (self.morse > 0.0) and (morse):
+            invoice_line_ids.append((0, 0, {
+                'product_id': morse_prod.id,
+                'name': morse_prod.name,
+                'price_unit': self.morse,
+                'account_id': morse_prod.property_account_income_id.id
+            }))
+        else:
+            pass
 
         journal_id = self.env['account.journal'].search([('code', '=', 'loan')])
         account_invoice_obj = self.env['account.invoice']

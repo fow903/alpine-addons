@@ -27,6 +27,12 @@
                     <button name="cancel" type="object"
                             states="post"
                             string="Cancelar"/>
+                    <button name="paid" type="object"
+                            states="post"
+                            string="Pagado"/>
+                    <!--<button name="draft" type="object"-->
+                            <!--states="paid"-->
+                            <!--string="Borrador"/>-->
 
 
                     <field name="state" widget="statusbar"/>
@@ -82,11 +88,12 @@
                 <field name="paid" widget="boolean_button"/>
                 <field name="date_paid"/>
                 <field name="invoice_id" widget="many2one_clickable"/>
+                <field name="invoice_state" invisible="1"/>
                 <button name="due_print"
                             type="object"
                             attrs="{'invisible':[('invoice_id','=',False)]}"
                             string="Imprimir"/>
-                <button name="pay_due"  attrs="{'invisible':['|',('ready','!=',True),('paid','=',True)]}" type="object" string="Pagar" class="oe_highlight"/>
+                <button name="pay_due"  attrs="{'invisible':[('invoice_state','!=','cancel'),'|',('ready','!=',True),('paid','=',True)]}" type="object" string="Pagar" class="oe_highlight"/>
             </tree>
         </field>
     </record>
