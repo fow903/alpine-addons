@@ -170,26 +170,31 @@ class AccountLoanLine(models.Model):
         return self.env['report'].get_action(self, 'reporte_factura.payment_receipt_doc')
 
     def get_morse(self):
+        print("Heree")
         due_date = datetime.strptime(self.date, '%Y-%m-%d')
         today = datetime.today()
         if due_date < today:
             morse = self.dues * (self.loan_id.rate_id.morse/100)
+            print(morse)
             times = (today - due_date).days
+            print("First",times)
             if self.loan_id.rate_id.type == 'daily':
                 times = times
             elif self.loan_id.rate_id.type == 'weekly':
-                times = int(times/7)
+                times = int(round(times/7.0))
             elif self.loan_id.rate_id.type == 'quincel':
-                times = int(times/15)
+                times = int(round(times/15.0))
             elif self.loan_id.rsate_id.type == 'monthly':
-                times = int(times/30)
+                times = int(round(times/30.0))
             elif self.loan_id.rate_id.type == 'bimonthly':
-                times = int(times/60)
+                times = int(round(times/60.0))
 
+            print(times)
             morse_last = 0.0
             for time in range(times):
                 morse_last += morse
 
+            print(morse_last)
             return morse_last
 
 
