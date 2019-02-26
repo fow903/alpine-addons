@@ -206,25 +206,6 @@ class AccountLoanLine(models.Model):
             'price_unit': self.dues,
             'account_id': prod.property_account_income_id.id
         }))
-        # due_date = datetime.strptime(self.date, '%Y-%m-%d')
-        # today = datetime.today()
-        # if due_date < today:
-        #     morse = self.dues * (self.loan_id.rate_id.morse/100)
-        #     times = (today - due_date).days
-        #     if self.loan_id.rate_id.type == 'daily':
-        #         times = times
-        #     elif self.loan_id.rate_id.type == 'weekly':
-        #         times = int(times/7)
-        #     elif self.loan_id.rate_id.type == 'quincel':
-        #         times = int(times/15)
-        #     elif self.loan_id.rsate_id.type == 'monthly':
-        #         times = int(times/30)
-        #     elif self.loan_id.rate_id.type == 'bimonthly':
-        #         times = int(times/60)
-        #
-        #     morse_last = 0.0
-        #     for time in range(times):
-        #         morse_last += morse
 
         self.morse = self.get_morse()
         if (self.morse > 0.0) and (morse):
