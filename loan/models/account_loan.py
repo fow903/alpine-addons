@@ -281,5 +281,5 @@ class RateLoan(models.Model):
 
     name = fields.Char(string="Nombre", required=True)
     type = fields.Selection(types, string="Tipo", required=True)
-    rate = fields.Float(string="Tarifa", digits=(8, 2), required=True)
-    morse = fields.Float("Mora")
+    rate = fields.Float(string="Tarifa", digits=(8, 5), required=True)
+    morse = fields.Float(string="Mora", digits=(8, 5))
